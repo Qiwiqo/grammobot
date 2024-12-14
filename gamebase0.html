@@ -5,30 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Моя игра</title>
     <style>
+        /* Стили для холста */
         canvas {
             border: 1px solid black;
             display: block;
             margin: 0 auto;
         }
+
+        /* Стили для стартового экрана */
+        #startScreen {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #startScreen button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        /* Скрываем холст по умолчанию */
+        #gameCanvas {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <h1>Моя простая игра</h1>
+    <!-- Стартовый экран -->
+    <div id="startScreen">
+        <h1>Добро пожаловать в игру!</h1>
+        <button id="newGameButton">Новая игра</button>
+        <button id="historyButton">История</button>
+    </div>
+
+    <!-- Холст для игры -->
     <canvas id="gameCanvas" width="400" height="400"></canvas>
+
     <script>
+        // Получаем ссылки на элементы
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        const startScreen = document.getElementById('startScreen');
+        const newGameButton = document.getElementById('newGameButton');
+        const historyButton = document.getElementById('historyButton');
 
+        // Начальные координаты квадрата
         let x = 50;
         let y = 50;
         const speed = 5;
 
+        // Функция для отрисовки квадрата
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = 'blue';
             ctx.fillRect(x, y, 50, 50);
         }
 
+        // Функция для обновления состояния игры
         function update() {
             if (keys.ArrowRight) x += speed;
             if (keys.ArrowLeft) x -= speed;
@@ -36,17 +69,40 @@
             if (keys.ArrowDown) y += speed;
         }
 
+        // Объект для хранения состояния нажатых клавиш
         const keys = {};
-        window.addEventListener('keydown', (e) => keys[e.key] = true);
-        window.addEventListener('keyup', (e) => keys[e.key] = false);
 
+        // Обработчик события нажатия клавиши
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+
+        // Обработчик события отпускания клавиши
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        // Основной игровой цикл
         function gameLoop() {
             update();
             draw();
             requestAnimationFrame(gameLoop);
         }
 
-        gameLoop();
+        // Обработчик кнопки "Новая игра"
+        newGameButton.addEventListener('click', () => {
+            // Скрываем стартовый экран
+            startScreen.style.display = 'none';
+            // Показываем холст игры
+            canvas.style.display = 'block';
+            // Запускаем игровой цикл
+            gameLoop();
+        });
+
+        // Обработчик кнопки "История"
+        historyButton.addEventListener('click', () => {
+            alert('Здесь будет отображаться история игр.');
+        });
     </script>
 </body>
 </html>
